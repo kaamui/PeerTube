@@ -9,7 +9,33 @@ This guide is not intended to be used for production environments. Please use [t
 
 ### 1) Dependencies
 
-**Follow the steps of the [dependencies guide](dependencies.md).**
+1. On a fresh Debian/Ubuntu, as root user, install basic utility programs needed for the installation
+
+```
+# apt-get install curl sudo unzip vim
+```
+
+2. It would be wise to disable root access and to continue this tutorial with a user with sudoers group access
+
+3. Install NodeJS 12.x:
+[https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions)
+4. Install yarn, and be sure to have [a recent version](https://github.com/yarnpkg/yarn/releases/latest):
+[https://yarnpkg.com/en/docs/install#linux-tab](https://yarnpkg.com/en/docs/install#linux-tab)
+
+5. Run:
+
+```
+sudo apt update
+sudo apt install nginx ffmpeg postgresql postgresql-contrib openssl g++ make redis-server git python-dev cron wget
+ffmpeg -version # Should be >= 4.1
+g++ -v # Should be >= 5.x
+```
+
+Now that dependencies are installed, before running PeerTube you should start PostgreSQL and Redis:
+
+```
+sudo systemctl start redis postgresql
+```
 
 ### 2) PeerTube user
 
