@@ -12,7 +12,7 @@ This guide is not intended to be used for production environments. Please use [t
 1. On a fresh Debian/Ubuntu, as root user, install basic utility programs needed for the installation
 
 ```
-# apt-get install curl sudo unzip vim
+apt-get install curl sudo unzip vim
 ```
 
 2. It would be wise to disable root access and to continue this tutorial with a user with sudoers group access
@@ -42,12 +42,12 @@ sudo systemctl start redis postgresql
 Create a `peertube` user with `/var/www/peertube` home:
 
 ```
-$ sudo useradd -m -d /var/www/peertube -s /bin/bash -p peertube peertube
+sudo useradd -m -d /var/www/peertube -s /bin/bash -p peertube peertube
 ```
 
 Set its password:
 ```
-$ sudo passwd peertube
+sudo passwd peertube
 ```
 
 ### 3) Database
@@ -55,48 +55,41 @@ $ sudo passwd peertube
 Create the production database and a peertube user inside PostgreSQL:
 
 ```
-$ sudo -u postgres createuser -P peertube
+sudo -u postgres createuser -P peertube
 ```
 
 Here you should enter a password for PostgreSQL `peertube` user, that should be copied in `production.yaml` file.
 Don't just hit enter else it will be empty.
 
 ```
-$ sudo -u postgres createdb -O peertube -E UTF8 -T template0 peertube_dev
+sudo -u postgres createdb -O peertube -E UTF8 -T template0 peertube_dev
 ```
 
 Then enable extensions PeerTube needs:
 
 ```
-$ sudo -u postgres psql -c "CREATE EXTENSION pg_trgm;" peertube_dev
-$ sudo -u postgres psql -c "CREATE EXTENSION unaccent;" peertube_dev
+sudo -u postgres psql -c "CREATE EXTENSION pg_trgm;" peertube_dev
+sudo -u postgres psql -c "CREATE EXTENSION unaccent;" peertube_dev
 ```
 
 ### 4) Prepare PeerTube directory
-
-Fetch the latest tagged version of Peertube
-```
-$ VERSION=$(curl -s https://api.github.com/repos/chocobozzz/peertube/releases/latest | grep tag_name | cut -d '"' -f 4) && echo "Latest Peertube version is $VERSION"
-```
-
 Open the peertube directory, create a few required directories
 ```
-$ cd /var/www/peertube
-$ sudo -u peertube mkdir config storage versions
+cd /var/www/peertube
+sudo -u peertube mkdir config storage versions
 ```
 
 Download the latest version of the Peertube client, unzip it and remove the zip
 ```
-$ cd /var/www/peertube/versions
-$ sudo -u peertube wget -q "https://github.com/Chocobozzz/PeerTube/releases/download/${VERSION}/peertube-${VERSION}.zip"
-$ sudo -u peertube unzip -q peertube-${VERSION}.zip && sudo -u peertube rm peertube-${VERSION}.zip
+cd /var/www/peertube/versions
+sudo -u peertube git clone https://github.com/kaamui/PeerTube.git peertube-dev
 ```
 
 Install Peertube:
 ```
-$ cd /var/www/peertube
-$ sudo -u peertube ln -s versions/peertube-${VERSION} ./peertube-latest
-$ cd ./peertube-latest && sudo -H -u peertube yarn install --pure-lockfile
+cd /var/www/peertube
+sudo -u peertube ln -s versions/peertube-dev ./peertube-latest
+cd ./peertube-latest && sudo -H -u peertube yarn install --pure-lockfile
 ```
 
 ### 5) PeerTube configuration
@@ -105,15 +98,15 @@ Copy the default configuration file that contains the default configuration prov
 You **must not** update this file.
 
 ```
-$ cd /var/www/peertube
-$ sudo -u peertube cp peertube-latest/config/default.yaml config/default.yaml
+cd /var/www/peertube
+sudo -u peertube cp peertube-latest/config/default.yaml config/default.yaml
 ```
 
 Now copy the development example configuration (same as production without certificate) :
 
 ```
-$ cd /var/www/peertube
-$ sudo -u peertube cp peertube-latest/config/development.yaml.example config/development.yaml
+cd /var/www/peertube
+sudo -u peertube cp peertube-latest/config/development.yaml.example config/development.yaml
 ```
 
 Then edit the `config/development.yaml` file according to your webserver
@@ -129,28 +122,28 @@ We only provide official configuration files for Nginx.
 Copy the nginx configuration template:
 
 ```
-$ sudo cp /var/www/peertube/peertube-latest/support/nginx/peertube-nocert /etc/nginx/sites-available/peertube
+sudo cp /var/www/peertube/peertube-latest/support/nginx/peertube-nocert /etc/nginx/sites-available/peertube
 ```
 
 Then set the domain for the webserver configuration file.
 Replace `[peertube-domain]` with the domain for the peertube server.
 
 ```
-$ sudo sed -i 's/${WEBSERVER_HOST}/[peertube-domain]/g' /etc/nginx/sites-available/peertube
-$ sudo sed -i 's/${PEERTUBE_HOST}/127.0.0.1:9000/g' /etc/nginx/sites-available/peertube
+sudo sed -i 's/${WEBSERVER_HOST}/[peertube-domain]/g' /etc/nginx/sites-available/peertube
+sudo sed -i 's/${PEERTUBE_HOST}/127.0.0.1:9000/g' /etc/nginx/sites-available/peertube
 ```
 
 Then modify the webserver configuration file. Please pay attention to the `alias` keys of the static locations.
 It should correspond to the paths of your storage directories (set in the configuration file inside the `storage` key).
 
 ```
-$ sudo vim /etc/nginx/sites-available/peertube
+sudo vim /etc/nginx/sites-available/peertube
 ```
 
 Activate the configuration file:
 
 ```
-$ sudo ln -s /etc/nginx/sites-available/peertube /etc/nginx/sites-enabled/peertube
+sudo ln -s /etc/nginx/sites-available/peertube /etc/nginx/sites-enabled/peertube
 ```
 
 ```
