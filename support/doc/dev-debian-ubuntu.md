@@ -96,7 +96,7 @@ Install Peertube:
 ```
 $ cd /var/www/peertube
 $ sudo -u peertube ln -s versions/peertube-${VERSION} ./peertube-latest
-$ cd ./peertube-latest && sudo -H -u peertube yarn install --production --pure-lockfile
+$ cd ./peertube-latest && sudo -H -u peertube yarn install --pure-lockfile
 ```
 
 ### 5) PeerTube configuration
