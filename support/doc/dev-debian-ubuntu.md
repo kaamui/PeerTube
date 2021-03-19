@@ -83,6 +83,7 @@ Download the latest version of the Peertube client, unzip it and remove the zip
 ```
 cd /var/www/peertube/versions
 sudo -u peertube git clone https://github.com/kaamui/PeerTube.git peertube-dev
+sudo -u peertube git checkout develop-doc-wip
 ```
 
 Install Peertube:
