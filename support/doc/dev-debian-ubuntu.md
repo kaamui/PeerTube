@@ -113,7 +113,7 @@ Now copy the development example configuration (same as production without certi
 
 ```
 $ cd /var/www/peertube
-$ sudo -u peertube cp peertube-latest/config/production.yaml.example config/development.yaml
+$ sudo -u peertube cp peertube-latest/config/development.yaml.example config/development.yaml
 ```
 
 Then edit the `config/development.yaml` file according to your webserver
