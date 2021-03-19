@@ -50,14 +50,6 @@ Set its password:
 $ sudo passwd peertube
 ```
 
-**On FreeBSD**
-
-```
-$ sudo pw useradd -n peertube -d /var/www/peertube -s /usr/local/bin/bash -m
-$ sudo passwd peertube
-```
-or use `adduser` to create it interactively.
-
 ### 3) Database
 
 Create the production database and a peertube user inside PostgreSQL:
@@ -165,12 +157,6 @@ $ sudo ln -s /etc/nginx/sites-available/peertube /etc/nginx/sites-enabled/peertu
 systemctl restart nginx
 ```
 
-**FreeBSD**
-On FreeBSD you can use [Dehydrated](https://dehydrated.io/) `security/dehydrated` for [Let's Encrypt](https://letsencrypt.org/)
-
-```
-$ sudo pkg install dehydrated
-```
 
 ### 7) TCP/IP Tuning
 
@@ -219,34 +205,6 @@ Run:
 ```
 $ sudo systemctl start peertube
 $ sudo journalctl -feu peertube
-```
-
-**FreeBSD**
-On FreeBSD, copy the startup script and update rc.conf:
-
-```
-$ sudo install -m 0555 /var/www/peertube/peertube-latest/support/freebsd/peertube /usr/local/etc/rc.d/
-$ sudo sysrc peertube_enable="YES"
-```
-
-Run:
-
-```
-$ sudo service peertube start
-```
-
-### OpenRC
-
-If your OS uses OpenRC, copy the service script:
-
-```
-$ sudo cp /var/www/peertube/peertube-latest/support/init.d/peertube /etc/init.d/
-```
-
-If you want to start PeerTube on boot:
-
-```
-$ sudo rc-update add peertube default
 ```
 
 Run and print last logs:
